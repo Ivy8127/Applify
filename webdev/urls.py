@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('applify/', include('applify.urls')),
+    # path('applify/', include('applify.urls')),
     # path('', RedirectView.as_view(url='applify/')), #redirects '' to applify/
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
+# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,3 +1,59 @@
 from django.db import models
+from django.contrib.auth.models import (
+    BaseUserManager, AbstractBaseUser
+)
+from .managers import UserManager
 
-# Create your models here.
+class User(AbstractBaseUser):
+    email = models.EmailField(
+        verbose_name='email',
+        max_length=255,
+        unique=True,
+    )
+    first_name = models.CharField(max_length=50,default='John')
+    last_name = models.CharField(max_length=50,default='Doe')
+    phone_number = models.CharField(max_length=12)
+
+    # is_active = models.BooleanField(default=True)
+    # staff = models.BooleanField(default=False) # a admin user; non super-user
+    admin = models.BooleanField(default=False) # a superuser
+
+
+    # notice the absence of a "Password field", that is built in.
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = [] # Email & Password are required by default.
+    objects = UserManager()
+
+    # def get_full_name(self):
+    #     # The user is identified by their email address
+    #     full_name = self.first_name+' '+self.last_name 
+    #     return full_name
+
+    # def get_short_name(self):
+    #     # The user is identified by their email address
+    #     return self.email
+
+    def __str__(self):
+	    full_name = self.first_name+' '+self.last_name 
+	    return full_name
+        # return self.email
+    # def has_perm(self, perm, obj=None):
+    #     "Does the user have a specific permission?"
+    #     Simplest possible answer: Yes, always
+    #     return True
+
+    # def has_module_perms(self, app_label):
+    #     "Does the user have permissions to view the app `app_label`?"
+    #     # Simplest possible answer: Yes, always
+    #     return True
+
+    # @property
+    # def is_staff(self):
+    #     "Is the user a member of staff?"
+    #     return self.staff
+
+    @property
+    def is_admin(self):
+        "Is the user a admin member?"
+        return self.admin
