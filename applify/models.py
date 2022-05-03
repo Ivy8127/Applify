@@ -17,8 +17,8 @@ class User(AbstractBaseUser):
     phone_number = models.CharField(max_length=12)
 
 
-    # is_active = models.BooleanField(default=True)
-    # staff = models.BooleanField(default=False) # a admin user; non super-user
+    is_active = models.BooleanField(default=True)
+    staff = models.BooleanField(default=False) # a admin user; non super-user
     admin = models.BooleanField(default=False) # a superuser
 
 
@@ -41,20 +41,20 @@ class User(AbstractBaseUser):
 	    full_name = self.first_name+' '+self.last_name 
 	    return full_name
         # return self.email
-    # def has_perm(self, perm, obj=None):
-    #     "Does the user have a specific permission?"
-    #     Simplest possible answer: Yes, always
-    #     return True
+    def has_perm(self, perm, obj=None):
+        # "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
 
-    # def has_module_perms(self, app_label):
-    #     "Does the user have permissions to view the app `app_label`?"
-    #     # Simplest possible answer: Yes, always
-    #     return True
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
 
-    # @property
-    # def is_staff(self):
-    #     "Is the user a member of staff?"
-    #     return self.staff
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        return self.staff
 
     @property
     def is_admin(self):
@@ -145,3 +145,5 @@ class URL(models.Model):
 	portofolio = models.CharField(max_length=100, help_text="Enter URL")
 
 	user = models.OneToOneField(User,on_delete=models.CASCADE,primary_key=True)
+
+# class Skills
