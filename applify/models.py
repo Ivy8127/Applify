@@ -1,65 +1,54 @@
 from django.db import models
-from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser
-)
+from django.contrib.auth.models import AbstractBaseUser
 from .managers import UserManager
 import datetime
 from webdev import settings
 
 class User(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name='email',
-        max_length=255,
-        unique=True,
-    )
-    first_name = models.CharField(max_length=50,default='John')
-    last_name = models.CharField(max_length=50,default='Doe')
-    phone_number = models.CharField(max_length=12)
+
+	email = models.EmailField(
+		verbose_name='email',
+		max_length=255,
+		unique=True,
+	)
+	first_name = models.CharField(max_length=50,default='John')
+	last_name = models.CharField(max_length=50,default='Doe')
+	phone_number = models.CharField(max_length=12)
 
 
-    is_active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=False) # a admin user; non super-user
-    admin = models.BooleanField(default=False) # a superuser
+	is_active = models.BooleanField(default=True)
+	staff = models.BooleanField(default=False) # a admin user; non super-user
+	admin = models.BooleanField(default=False) # a superuser
 
 
-    # notice the absence of a "Password field", that is built in.
+	# notice the absence of a "Password field", that is built in.
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [] # Email & Password are required by default.
-    objects = UserManager()
+	USERNAME_FIELD = 'email'
+	REQUIRED_FIELDS = [] # Email & Password are required by default.
+	objects = UserManager()
+	def __str__(self):
+		full_name = self.first_name + ' ' + self.last_name 
+		return full_name
+		#return self.email
+	def has_perm(self, perm, obj=None):
+		# "Does the user have a specific permission?"
+		# Simplest possible answer: Yes, always
+		return True
 
-    # def get_full_name(self):
-    #     # The user is identified by their email address
-    #     full_name = self.first_name+' '+self.last_name 
-    #     return full_name
+	def has_module_perms(self, app_label):
+		"Does the user have permissions to view the app `app_label`?"
+		# Simplest possible answer: Yes, always
+		return True
 
-    # def get_short_name(self):
-    #     # The user is identified by their email address
-    #     return self.email
+	@property
+	def is_staff(self):
+		"Is the user a member of staff?"
+		return self.staff
 
-    def __str__(self):
-	    full_name = self.first_name+' '+self.last_name 
-	    return full_name
-        # return self.email
-    def has_perm(self, perm, obj=None):
-        # "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        return self.staff
-
-    @property
-    def is_admin(self):
-        "Is the user a admin member?"
-        return self.admin
+	@property
+	def is_admin(self):
+		"Is the user a admin member?"
+		return self.admin
 
 class Role(models.Model):
 	role_name = models.CharField(max_length=200,help_text="Enter Role")
@@ -70,19 +59,18 @@ class Education(models.Model):
 	major = models.CharField(max_length=255,help_text="Enter your major")
 
 	DEGREE_CHOICES = (
-    ('bachelors','BACHELORS'),
-    ('masters', 'MASTERS'),
-    ('phd','PHD'),
-    ('mba','MBA'),
-    ('associate','ASSOCIATE'),
+	('bachelors','BACHELORS'),
+	('masters', 'MASTERS'),
+	('phd','PHD'),
+	('mba','MBA'),
+	('associate','ASSOCIATE'),
 	)
 
 	degree_type = models.CharField(max_length=10,choices=DEGREE_CHOICES)
-	start_year = models.IntegerField(max_length=5,help_text="Enter Start Year")
-	end_year = models.IntegerField(max_length=5,help_text="Enter End Year")
-
+	start_year = models.IntegerField(help_text="Enter Start Year")
+	end_year = models.IntegerField(help_text="Enter End Year")
 	def __str__(self):
-        # """String for representing the MyModelName object (in Admin site etc.)."""
+		# """String for representing the MyModelName object (in Admin site etc.)."""
 		return self.school_name  
 
 	role = models.ForeignKey(Role,on_delete=models.CASCADE)      
@@ -92,9 +80,9 @@ class WorkExperience(models.Model):
 	position_title = models.CharField(max_length=100,help_text="Enter your position")
 
 	EXPERIENCE_CHOICES = (
-    ('internship','INTERNSHIP'),
-    ('part-time', 'PART-TIME'),
-    ('full-time','FULL-TIME'),
+	('internship','INTERNSHIP'),
+	('part-time', 'PART-TIME'),
+	('full-time','FULL-TIME'),
 	)
 
 	MONTH_CHOICES = (
@@ -123,8 +111,8 @@ class WorkExperience(models.Model):
 			(x,x)
 			)
 
-	start_year = models.IntegerField(max_length=5,help_text="Enter Start Year",choices=YEAR_CHOICES)
-	end_year = models.IntegerField(max_length=5,help_text="Enter End Year",choices=YEAR_CHOICES)
+	start_year = models.IntegerField(help_text="Enter Start Year",choices=YEAR_CHOICES)
+	end_year = models.IntegerField(help_text="Enter End Year",choices=YEAR_CHOICES)
 
 	start_month = models.CharField(max_length=12,help_text="Enter Start Month",choices=MONTH_CHOICES)
 	end_month = models.CharField(max_length=12,help_text="Enter End Month",choices=MONTH_CHOICES)
