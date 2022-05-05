@@ -1,0 +1,16 @@
+.header{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 50px;
+    background-color: rgb(232, 135, 16);
+}
+.logo{
+
+}
+.dashboard{
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 48px;
+    font-family: poppins;
+}
